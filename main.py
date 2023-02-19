@@ -4,9 +4,13 @@ from crawler import crawler
 from domain import *
 from  tstcrawler import *
 
-PROJECT_NAME="samsung"
-HOMEPAGE="https://www.samsung.com/in/"
+#PROJECT_NAME="samsung"
+#HOMEPAGE="https://www.samsung.com/in/"
+
+PROJECT_NAME="DOG"
+HOMEPAGE="https://en.wikipedia.org/wiki/Dog"
 DOMAIN_NAME=get_domain_name(HOMEPAGE)
+
 print("domain name:",DOMAIN_NAME)
 QUEUE_FILE=PROJECT_NAME+"/queue.txt"
 CRAWLED_FILE=PROJECT_NAME+"/crawled.txt"

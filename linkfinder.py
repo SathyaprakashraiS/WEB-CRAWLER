@@ -13,7 +13,7 @@ class LinkFinder(HTMLParser):
 		if tag=="a":
 			for (attribute,value) in attrs:
 				if attribute=="href":
-					#print("found a link:",value)
+					print("found a link:",value)
 					url=parse.urljoin(self.base_url,value)
 					self.links.add(url)
 
@@ -23,8 +23,12 @@ class LinkFinder(HTMLParser):
 	def error(seld,message):
 		pass
 
-#import requests
+import requests
+test=requests.get(url="https://en.wikipedia.org/wiki/Dog").text
 #test=requests.get(url = 'https://google.com').text
 #q=LinkFinder("https://www.youtube.com/","https://www.youtube.com/")
 #q.feed("<!DOCTYPE html><html><head><title>Page Title</title></head><body><h1>This is a Heading</h1><a href='erukumo.com'></a><p>This is a paragraph.</p></body></html>")
+#q.feed(test)
+
+#q=LinkFinder("https://en.wikipedia.org/wiki/Dog","https://en.wikipedia.org/wiki/Dog")
 #q.feed(test)
