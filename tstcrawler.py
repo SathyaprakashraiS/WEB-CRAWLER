@@ -23,7 +23,7 @@ def addtofile(path,data):
 		file.write(data+"\n")
 
 def deletefilecontent(path):
-	with.open(path,"w"):
+	with open(path,"w"):
 		pass
 
 #read the to be crawled txt and add them to a set. set because to avoid data duplicacy
