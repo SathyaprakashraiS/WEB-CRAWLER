@@ -19,6 +19,7 @@ def write_file(path,data):
 	f.close()
 
 def addtofile(path,data):
+	print("writting ",data,"to file ",path)
 	with open(path,"a") as file:
 		file.write(data+"\n")
 

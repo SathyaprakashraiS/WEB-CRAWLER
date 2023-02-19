@@ -1,6 +1,7 @@
 from urllib.request import urlopen
 from linkfinder import LinkFinder
 from tstcrawler import *
+import requests
 
 class crawler:
 	projectname=""
@@ -29,7 +30,10 @@ class crawler:
 
 	@staticmethod
 	def crawlpage(thread_name,page_url):
+		print("in tthis function")
+		print("crawled:",crawler.crawled)
 		if page_url not in crawler.crawled:
+			print("page url not in crawled file")
 			print(thread_name+" crawling "+page_url)
 			print("Queue "+str(len(crawler.queue)))
 			print("Crawled "+str(len(crawler.crawled)))
@@ -40,15 +44,19 @@ class crawler:
 
 	@staticmethod
 	def gatherlinks(page_url):
+		print("in gather links")
 		html_string=""
 		try:
-			response=urlopen(page_url)
-			print("response:",response)
-			if response.getheader("Content Type")=="text/html":
-				html_bytes=response.read()
-				html_string=html_bytes.decode("utf-8")
+			response=requests.get(url=page_url).text
 			finder=LinkFinder(crawler.baseurl,page_url)
-			finder.feed(html_string)
+			finder.feed(response)
+			# response=urlopen(page_url)
+			# print("response:",response)
+			# if response.getheader("Content Type")=="text/html":
+			# 	html_bytes=response.read()
+			# 	html_string=html_bytes.decode("utf-8")
+			# finder=LinkFinder(crawler.baseurl,page_url)
+			# finder.feed(html_string)
 		except:
 			print("Error: cannot crawl page")
 			return set()
@@ -56,17 +64,22 @@ class crawler:
 
 	@staticmethod
 	def appendlinkstoqueue(links):
+		print("in append links to queue")
 		for url in links:
+			#print("url is :",url)
 			if url in crawler.queue:
 				continue
-			if url in crawler.crawled:
+			elif url in crawler.crawled:
 				continue
 			#add to stop it from crawling non domain pages
-			if crawler.domainname not in url:
+			elif crawler.domainname not in url:
 				continue
+			else:
+				crawler.queue.add(url)
 
 	@staticmethod
 	def updatefiles():
+		print("nan inga eruken :)")
 		fromsettofile(crawler.queue,crawler.queuefile)
 		fromsettofile(crawler.crawled,crawler.crawledfile)
 

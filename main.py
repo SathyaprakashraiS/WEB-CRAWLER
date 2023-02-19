@@ -7,13 +7,14 @@ from  tstcrawler import *
 PROJECT_NAME="samsung"
 HOMEPAGE="https://www.samsung.com/in/"
 DOMAIN_NAME=get_domain_name(HOMEPAGE)
-
+print("domain name:",DOMAIN_NAME)
 QUEUE_FILE=PROJECT_NAME+"/queue.txt"
 CRAWLED_FILE=PROJECT_NAME+"/crawled.txt"
 
 NUMBER_OF_THREADS=8
 
 queue=Queue()
+queue.put(HOMEPAGE)
 crawler(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME)
 
 #suicide squad die when main is killed or dies :)
@@ -24,7 +25,9 @@ def create_workers():
 		t.start()
 
 def work():
+	print("inside work")
 	while True:
+		print("test inside")
 		url=queue.get()
 		print("inside the wok func")
 		#print("the url obtained:",url)
