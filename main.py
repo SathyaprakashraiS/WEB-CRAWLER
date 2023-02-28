@@ -4,8 +4,8 @@ from crawler import crawler
 from domain import *
 from  tstcrawler import *
 
-PROJECT_NAME="Dog"
-HOMEPAGE="https://en.wikipedia.org/wiki/dog"
+PROJECT_NAME="act"
+HOMEPAGE="https://en.wikipedia.org/wiki/cat"
 MAX=50
 
 #PROJECT_NAME="SAMSUNG"
@@ -20,7 +20,7 @@ NUMBER_OF_THREADS=8
 
 queue=Queue()
 queue.put(HOMEPAGE)
-crawler(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME)
+crawler(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME,PROJECT_NAME)
 
 #suicide squad die when main is killed or dies :)
 def create_workers():

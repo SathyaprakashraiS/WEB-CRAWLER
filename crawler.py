@@ -13,13 +13,15 @@ class crawler:
 	domainname=""
 	queuefile=""
 	crawledfile=""
+	topic=""
 	queue=set()
 	crawled=set()
 
-	def __init__(self,projectname,baseurl,domainname):
+	def __init__(self,projectname,baseurl,domainname,topic):
 		crawler.projectname=projectname
 		crawler.baseurl=baseurl
 		crawler.domainname=domainname
+		crawler.topic=topic
 		crawler.queuefile=crawler.projectname+"/queue.txt"
 		crawler.crawledfile=crawler.projectname+"/crawled.txt"
 		self.boot()
@@ -72,7 +74,7 @@ class crawler:
 								print("over here")
 								linked_page = requests.get(href)
 								linked_soup = BeautifulSoup(linked_page.content, 'html.parser')
-								if topic in linked_soup.get_text():
+								if crawler.topic in linked_soup.get_text():
 									print("relevant")
 									#finder.appthelink(href)
 									crawler.appendsinglelinktoqueue(href)
