@@ -48,28 +48,54 @@ class crawler:
 	@staticmethod
 	def gatherlinks(page_url):
 		print("in gather links")
+		#this code is to find page relevance to the given topic
 		html_string=""
+		finder=LinkFinder(crawler.baseurl,page_url)
 		try:
-			href=page_url.get('href')
-			print("the href:",href)
-			try:
-				if href.startswith('https'):
-					try:
-						linked_page=requests.get(href)
-						linked_soup=BeautifulSoup(linked_page.content, 'html.parser')
-						# Check if linked page contains relevant content
-						if topic in linked_soup.get_text():
-							print("this contains the topic",href)
-							response=requests.get(url=page_url).text
-							finder=LinkFinder(crawler.baseurl,page_url)
-							print("the response:",response)
-							finder.feed(response)  
-					except:
-						print("not in link")
-			except:
-				print("Error: cannot crawl page")
-				return set()    
+			response=requests.get(page_url)
+			soup=BeautifulSoup(response.content, 'html.parser')
+			q=[]
+			q=soup.find_all('a')
+			#print("toital links in page:",soup.find_all('a'))
+			for link in soup.find_all('a'):
+				href = link.get('href')
+				try:
+					if href.startswith('http'):
+						try:
+							#print("over here")
+							linked_page = requests.get(href)
+							linked_soup = BeautifulSoup(linked_page.content, 'html.parser')
+							if topic in linked_soup.get_text():
+								finder.appthelink(href)
+								crawler.appendsinglelinktoqueue(href)
+								#print("relevant ",href)
+						except:
+							print("keyword mismatch topic aint relevant!")
+							print("irrelevant link ",href)
+				except:
+					pass       
+			#testing the code not sure
+			# href=page_url.get('href')
+			# print("the href:",href)
+			# try:
+			# 	if href.startswith('https'):
+			# 		try:
+			# 			linked_page=requests.get(href)
+			# 			linked_soup=BeautifulSoup(linked_page.content, 'html.parser')
+			# 			# Check if linked page contains relevant content
+			# 			if topic in linked_soup.get_text():
+			# 				print("this contains the topic",href)
+			# 				response=requests.get(url=page_url).text
+			# 				finder=LinkFinder(crawler.baseurl,page_url)
+			# 				print("the response:",response)
+			# 				finder.feed(response)  
+			# 		except:
+			# 			print("not in link")
+			# except:
+			# 	print("Error: cannot crawl page")
+			# 	return set()    
 
+			#this ocde works for the visualising part because its used to find pages conected and not relevance
 			''' 
 			response=requests.get(url=page_url).text
 			finder=LinkFinder(crawler.baseurl,page_url)
@@ -84,7 +110,7 @@ class crawler:
 			# finder=LinkFinder(crawler.baseurl,page_url)
 			# finder.feed(html_string)
 		except:
-			print("Error: cannot crawl page")
+			print("Error: cannot crawl page 0")
 			return set()
 		return finder.pagelinks()
 
@@ -102,6 +128,19 @@ class crawler:
 				continue
 			else:
 				crawler.queue.add(url)
+
+	@staticmethod
+	def appendsinglelinktoqueue(thelink):
+		print("trying to append a single link")
+		if thelink in crawler.queue:
+			continue
+		elif thelink in crawler.crawled:
+			continue
+		elif crawler.domainname not in url:
+			print("domain name missing skipping url: ",thelink)
+			continue
+		else:
+			crawler.queue.add(thelink)
 
 	@staticmethod
 	def updatefiles():

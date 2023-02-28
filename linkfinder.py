@@ -9,6 +9,8 @@ class LinkFinder(HTMLParser):
 		self.links=set()
 
 	def handle_starttag(self,tag,attrs):
+		print("i got called !")
+		'''
 		print(tag)
 		if tag=="a":
 			for (attribute,value) in attrs:
@@ -16,6 +18,10 @@ class LinkFinder(HTMLParser):
 					print("found a link:",value)
 					url=parse.urljoin(self.base_url,value)
 					self.links.add(url)
+		'''
+
+	def appthelink(self,thelinktoappend):
+		self.links.add(thelinktoappend)
 
 	def pagelinks(self):
 		return self.links

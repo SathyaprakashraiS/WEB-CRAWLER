@@ -1,5 +1,7 @@
 import os
 
+flag=0
+
 def create_project_dir(directory):
 	if not os.path.exists(directory):
 		print("Creating a new project directory "+directory)
@@ -29,6 +31,7 @@ def deletefilecontent(path):
 
 #read the to be crawled txt and add them to a set. set because to avoid data duplicacy
 def fromfiletoset(filename):
+	print("reading from file")
 	results=set()
 	with open(filename,"rt") as f:
 		for line in f:
@@ -37,9 +40,20 @@ def fromfiletoset(filename):
 
 #read the set and add the links in set to a txt file
 def fromsettofile(links,file):
+	print("writting to file")
+	if flag<10:
+		deletefilecontent(file)
+		for link in sorted(links):
+			addtofile(file,link)
+		file+=1
+	else:
+		print("flag passed not writting to file :)")
+
+	'''
 	deletefilecontent(file)
 	for link in sorted(links):
 		addtofile(file,link)
+	'''
 
 
 
