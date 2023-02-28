@@ -2,6 +2,9 @@ from urllib.request import urlopen
 from linkfinder import LinkFinder
 from tstcrawler import *
 import requests
+from bs4 import BeautifulSoup
+
+topic="dog"
 
 class crawler:
 	projectname=""
@@ -47,9 +50,32 @@ class crawler:
 		print("in gather links")
 		html_string=""
 		try:
+			href=page_url.get('href')
+			print("the href:",href)
+			try:
+				if href.startswith('https'):
+					try:
+						linked_page=requests.get(href)
+						linked_soup=BeautifulSoup(linked_page.content, 'html.parser')
+						# Check if linked page contains relevant content
+						if topic in linked_soup.get_text():
+							print("this contains the topic",href)
+							response=requests.get(url=page_url).text
+							finder=LinkFinder(crawler.baseurl,page_url)
+							print("the response:",response)
+							finder.feed(response)  
+					except:
+						print("not in link")
+			except:
+				print("Error: cannot crawl page")
+				return set()    
+
+			''' 
 			response=requests.get(url=page_url).text
 			finder=LinkFinder(crawler.baseurl,page_url)
 			finder.feed(response)
+			'''
+
 			# response=urlopen(page_url)
 			# print("response:",response)
 			# if response.getheader("Content Type")=="text/html":

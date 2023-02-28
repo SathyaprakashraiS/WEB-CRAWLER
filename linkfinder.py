@@ -23,8 +23,8 @@ class LinkFinder(HTMLParser):
 	def error(seld,message):
 		pass
 
-import requests
-test=requests.get(url="https://en.wikipedia.org/wiki/Dog").text
+#import requests
+#test=requests.get(url="https://en.wikipedia.org/wiki/Dog").text
 #test=requests.get(url = 'https://google.com').text
 #q=LinkFinder("https://www.youtube.com/","https://www.youtube.com/")
 #q.feed("<!DOCTYPE html><html><head><title>Page Title</title></head><body><h1>This is a Heading</h1><a href='erukumo.com'></a><p>This is a paragraph.</p></body></html>")

@@ -1,1 +1,1 @@
-htpps://en.wikipedia.org/wiki/Dog
+https://en.wikipedia.org/wiki/dog

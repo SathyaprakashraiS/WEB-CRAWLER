@@ -4,11 +4,12 @@ from crawler import crawler
 from domain import *
 from  tstcrawler import *
 
-#PROJECT_NAME="samsung"
-#HOMEPAGE="https://www.samsung.com/in/"
+PROJECT_NAME="Dog"
+HOMEPAGE="https://en.wikipedia.org/wiki/dog"
+MAX=50
 
-PROJECT_NAME="DOG"
-HOMEPAGE="https://en.wikipedia.org/wiki/Dog"
+#PROJECT_NAME="SAMSUNG"
+#HOMEPAGE="https://www.samsung.com/in/"
 DOMAIN_NAME=get_domain_name(HOMEPAGE)
 
 print("domain name:",DOMAIN_NAME)
