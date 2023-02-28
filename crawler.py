@@ -5,6 +5,7 @@ import requests
 from bs4 import BeautifulSoup
 
 topic="dog"
+flag=0
 
 class crawler:
 	projectname=""
@@ -48,6 +49,8 @@ class crawler:
 	@staticmethod
 	def gatherlinks(page_url):
 		print("in gather links")
+		print("the page to be crawled is: ",page_url)
+		flag=0
 		#this code is to find page relevance to the given topic
 		html_string=""
 		finder=LinkFinder(crawler.baseurl,page_url)
@@ -58,22 +61,32 @@ class crawler:
 			q=soup.find_all('a')
 			#print("toital links in page:",soup.find_all('a'))
 			for link in soup.find_all('a'):
-				href = link.get('href')
-				try:
-					if href.startswith('http'):
-						try:
-							#print("over here")
-							linked_page = requests.get(href)
-							linked_soup = BeautifulSoup(linked_page.content, 'html.parser')
-							if topic in linked_soup.get_text():
-								finder.appthelink(href)
-								crawler.appendsinglelinktoqueue(href)
-								#print("relevant ",href)
-						except:
-							print("keyword mismatch topic aint relevant!")
-							print("irrelevant link ",href)
-				except:
-					pass       
+				if(flag<100):
+					flag+=1
+					print("running",flag)
+					href=link.get('href')
+					print("the link",href)
+					try:
+						if href.startswith('http'):
+							try:
+								print("over here")
+								linked_page = requests.get(href)
+								linked_soup = BeautifulSoup(linked_page.content, 'html.parser')
+								if topic in linked_soup.get_text():
+									print("relevant")
+									#finder.appthelink(href)
+									crawler.appendsinglelinktoqueue(href)
+									#crawler.queue.remove(href)
+									#crawler.crawled.add(href)
+									#crawler.updatefiles()
+									print("relevant ",href)
+							except:
+								print("keyword mismatch topic aint relevant!")
+								print("irrelevant link ",href)
+					except:
+						pass
+				else:
+					pass   
 			#testing the code not sure
 			# href=page_url.get('href')
 			# print("the href:",href)
@@ -124,23 +137,29 @@ class crawler:
 			elif url in crawler.crawled:
 				continue
 			#add to stop it from crawling non domain pages
-			elif crawler.domainname not in url:
-				continue
+			#elif crawler.domainname not in url:
+			#	continue
 			else:
 				crawler.queue.add(url)
 
 	@staticmethod
 	def appendsinglelinktoqueue(thelink):
 		print("trying to append a single link")
+		print("got this link: ",thelink)
 		if thelink in crawler.queue:
-			continue
+			print("thelink in queue")
+			pass
 		elif thelink in crawler.crawled:
-			continue
-		elif crawler.domainname not in url:
-			print("domain name missing skipping url: ",thelink)
-			continue
+			print("the link in crawled list")
+			pass
+		#elif crawler.domainname not in url:
+		#	print("domain name missing skipping url: ",thelink)
+			pass
 		else:
-			crawler.queue.add(thelink)
+			print("added to queue")
+		crawler.queue.add(thelink)
+		print("added the link to queue")
+		print("")
 
 	@staticmethod
 	def updatefiles():
