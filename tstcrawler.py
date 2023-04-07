@@ -62,6 +62,13 @@ def fromsettofile(links,file):
 	for link in sorted(links):
 		addtofile(file,link)
 
+def createcontentfile(projectname):
+	content=projectname+"/content.txt"
+	#crawled=projectname+"/crawled.txt"
+	print("writting content to the content file")
+	if not os.path.isfile(content):
+		#print("the base url0:",baseurl)
+		write_file(content,"")
 
 
 #create_project_dir("testing")

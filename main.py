@@ -20,6 +20,7 @@ NUMBER_OF_THREADS=8
 
 queue=Queue()
 queue.put(HOMEPAGE)
+createcontentfile(PROJECT_NAME)
 crawler(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME,PROJECT_NAME)
 
 #suicide squad die when main is killed or dies :)
@@ -51,7 +52,7 @@ def crawl():
 		print(str(len(queue_links))+" links in the queue")
 		create_jobs()
 
-#create_workers()
-#crawl()
+create_workers()
+crawl()
 
 print("terminated successfully ! :)")
