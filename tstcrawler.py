@@ -38,7 +38,10 @@ def fromfiletoset(filename):
 	with open(filename,"rt") as f:
 		for line in f:
 			print("line in file: ",line)
-			results.add(line.replace("\n",""))
+			try:
+				results.add(line.replace("\n",""))
+			except:
+				return results
 	print("theresults: ",results)
 	return results
 

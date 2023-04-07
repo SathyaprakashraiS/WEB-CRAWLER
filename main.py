@@ -4,9 +4,9 @@ from crawler import crawler
 from domain import *
 from  tstcrawler import *
 
-PROJECT_NAME="act"
+PROJECT_NAME="etst"
 HOMEPAGE="https://en.wikipedia.org/wiki/cat"
-MAX=50
+#MAX=50
 
 #PROJECT_NAME="SAMSUNG"
 #HOMEPAGE="https://www.samsung.com/in/"
@@ -51,5 +51,7 @@ def crawl():
 		print(str(len(queue_links))+" links in the queue")
 		create_jobs()
 
-create_workers()
-crawl()
+#create_workers()
+#crawl()
+
+print("terminated successfully ! :)")

@@ -4,7 +4,7 @@ from tstcrawler import *
 import requests
 from bs4 import BeautifulSoup
 
-topic="dog"
+topic="cat"
 flag=0
 
 class crawler:
@@ -21,7 +21,7 @@ class crawler:
 		crawler.projectname=projectname
 		crawler.baseurl=baseurl
 		crawler.domainname=domainname
-		crawler.topic=topic
+		crawler.topic="cat"
 		crawler.queuefile=crawler.projectname+"/queue.txt"
 		crawler.crawledfile=crawler.projectname+"/crawled.txt"
 		self.boot()
@@ -44,7 +44,10 @@ class crawler:
 			print("Queue "+str(len(crawler.queue)))
 			print("Crawled "+str(len(crawler.crawled)))
 			crawler.appendlinkstoqueue(crawler.gatherlinks(page_url))
-			crawler.queue.remove(page_url)
+			try:
+				crawler.queue.remove(page_url)
+			except:
+				pass
 			crawler.crawled.add(page_url)
 			crawler.updatefiles()
 
@@ -52,7 +55,7 @@ class crawler:
 	def gatherlinks(page_url):
 		print("in gather links")
 		print("the page to be crawled is: ",page_url)
-		flag=0
+		global flag
 		#this code is to find page relevance to the given topic
 		html_string=""
 		finder=LinkFinder(crawler.baseurl,page_url)
@@ -82,13 +85,20 @@ class crawler:
 									#crawler.crawled.add(href)
 									#crawler.updatefiles()
 									print("relevant ",href)
+								#crawler.appendsinglelinktoqueue(href)
+								else:
+									#for k in range(100):
+										#print("content")
+									#print(linked_soup.get_text())
+									print("keyword mismatch topic aint relevant!")
+									print("irrelevant link ",href)
 							except:
 								print("keyword mismatch topic aint relevant!")
 								print("irrelevant link ",href)
 					except:
-						pass
+						return finder.pagelinks()
 				else:
-					pass   
+					return finder.pagelinks()
 			#testing the code not sure
 			# href=page_url.get('href')
 			# print("the href:",href)
