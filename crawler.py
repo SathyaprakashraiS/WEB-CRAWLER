@@ -114,6 +114,8 @@ class crawler:
 					try:
 						if href.startswith('http'):
 							try:
+								q=Reader
+								'''
 								##print("over here")
 								linked_page = requests.get(href)
 								linked_soup = BeautifulSoup(linked_page.content, 'html.parser')
@@ -125,6 +127,7 @@ class crawler:
 									##print("keyword mismatch topic aint relevant!")
 									##print("irrelevant link ",href)
 									pass
+								'''
 							except:
 								##print("keyword mismatch topic aint relevant!")
 								##rint("irrelevant link ",href)
