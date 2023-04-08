@@ -10,12 +10,15 @@ def create_project_dir(directory):
 def create_data_files(projectname,baseurl):
 	queue=projectname+"/queue.txt"
 	crawled=projectname+"/crawled.txt"
+	content=projectname+"/content.txt"
 	print("writting base url to the queue file")
 	if not os.path.isfile(queue):
 		print("the base url0:",baseurl)
 		write_file(queue,baseurl)
 	if not os.path.isfile(crawled):
 		write_file(crawled,"")
+	if not os.path.isfile(content):
+		write_file(content,"")
 
 def write_file(path,data):
 	f=open(path,"w")
@@ -70,6 +73,13 @@ def createcontentfile(projectname):
 		#print("the base url0:",baseurl)
 		write_file(content,"")
 
+def fromsummarytofile(projectname,summarisedcontent):
+	print("writting in content")
+	#print("the content is ",summarisedcontent)
+	content=projectname+"/content.txt"
+	#deletefilecontent(content)
+	with open(content,"a",encoding="utf-8") as file:
+		file.write(summarisedcontent+"\n")
 
 #create_project_dir("testing")
 #create_data_files("testing","https://vtop.vit.ac.in/vtop/login")

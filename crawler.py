@@ -13,6 +13,8 @@ from queue import Queue, Empty
 from urllib.parse import urljoin, urlparse
 #import requests
 
+import re
+
 topic="cat"
 #flag=0
 
@@ -26,9 +28,11 @@ class crawler:
 	seed_url =""
 	root_url =""
 	flag=0
-        
+       
 	queue=set()
 	crawled=set()
+
+	summary=""
 
 	def __init__(self,projectname,baseurl,domainname,topic):
 		crawler.projectname=projectname
@@ -42,6 +46,8 @@ class crawler:
 
 		crawler.seed_url = baseurl
 		crawler.root_url = '{}://{}'.format(urlparse(self.seed_url).scheme,urlparse(self.seed_url).netloc)
+
+		crawler.summary=""
 
 		self.boot()
 		self.crawlpage("first crawler",crawler.baseurl)
@@ -58,23 +64,34 @@ class crawler:
 		print("in tthis function")
 		print("crawled:",crawler.crawled)
 		if page_url not in crawler.crawled:
-			print("page url not in crawled file")
-			print(thread_name+" crawling "+page_url)
-			print("Queue "+str(len(crawler.queue)))
-			print("Crawled "+str(len(crawler.crawled)))
-			#crawler.gatherlinks(page_url)
-			crawler.appendlinkstoqueue(crawler.gatherlinks(page_url))
-			try:
-				crawler.queue.remove(page_url)
-			except:
-				pass
-			for i in range(100):
+			if(len(crawler.crawled)<=10):
+				print("page url not in crawled file")
+				print(thread_name+" crawling "+page_url)
+				print("Queue "+str(len(crawler.queue)))
+				print("Crawled "+str(len(crawler.crawled)))
+				#crawler.gatherlinks(page_url)
+				crawler.appendlinkstoqueue(crawler.gatherlinks(page_url))
+				try:
+					crawler.queue.remove(page_url)
+				except:
+					pass
+				#for i in range(100):
 				print("got returned")
-			crawler.crawled.add(page_url)
-			crawler.updatefiles()
+				crawler.crawled.add(page_url)
+				crawler.updatefiles()
+			else:
+				try:
+					crawler.queue.remove(page_url)
+				except:
+					pass
+				#for i in range(100):
+				print("crawled many in else")
+				crawler.crawled.add(page_url)
+				crawler.updatefiles()				
 
 	@staticmethod
 	def gatherlinks(page_url):
+		wikipedia_pattern = r'^https?://([a-z]+\.)?wikipedia\.org/wiki/'
 		'''
 		testqueue=set()
 		#soup = BeautifulSoup(page_url, 'html.parser')
@@ -98,10 +115,71 @@ class crawler:
 		#global flag
 		#this code is to find page relevance to the given topic
 		html_string=""
+		summary=""
 		finder=LinkFinder(crawler.baseurl,page_url)
 		try:
 			response=requests.get(page_url)
 			soup=BeautifulSoup(response.content, 'html.parser')
+			try:
+				print("in try block")
+				q=Reader
+				#theres=q.fres("https://en.wikipedia.org/wiki/cat")
+				#q.test(theres)
+				text,score=q.scraptext(page_url,"cat")
+				#print("the text is ",text)
+				print("the score is ",score)
+				if(score>0.7):
+					print("text length is",len(text))
+					summary=q.summarisecontent(text)
+					print("summary length is",len(summary))
+					crawler.writesumcontenttofile(crawler.projectname,summary)
+					q=[]
+					q=soup.find_all('a')
+					print("q length is",len(q))
+					# for links in q:
+					# 	print(links)
+					for links in soup.find_all('a'):
+						href=links.get('href')
+						print("link is ",links)
+						print("href is ",href)
+						if(re.match(wikipedia_pattern, href)):
+							print("the link adding to queue is ",href)
+							crawler.appendsinglelinktoqueue(href)
+						#if href.startswith('http'):
+						#	print("the link adding to queue is ",href)
+						#	crawler.appendsinglelinktoqueue(href)
+						else:
+							print("in else")
+					return finder.pagelinks()
+					'''
+						if(crawler.flag<100):
+							crawler.flag+=1
+							href=link.get('href')
+							if href.startswith('http'):
+								try:
+								print("ulla eruken")
+								q=Reader
+								#theres=q.fres("https://en.wikipedia.org/wiki/cat")
+								#q.test(theres)
+								text,score=q.scraptext(link,"cAt")
+								if(score>0):
+									print("text length is",len(text))
+									summary=q.summarisecontent(text)
+									print("summary length is",len(summary))
+								else:
+									pass
+								except:
+									print("thorathitan")
+						else:
+							return finder.pagelinks()
+						'''
+				else:
+					print("page irrelevent")
+					print("page score is ",score)
+					return set()
+			except:
+				return set()
+				'''
 			q=[]
 			q=soup.find_all('a')
 			#print("toital links in page:",soup.find_all('a'))
@@ -110,25 +188,25 @@ class crawler:
 					crawler.flag+=1
 					##print("running",flag)
 					href=link.get('href')
+					print("ulla poga poren")
 					##print("the link",href)
 					try:
 						if href.startswith('http'):
 							try:
+								print("ulla eruken")
 								q=Reader
-								'''
-								##print("over here")
-								linked_page = requests.get(href)
-								linked_soup = BeautifulSoup(linked_page.content, 'html.parser')
-								if crawler.topic in linked_soup.get_text():
-									##print("relevant")
-									crawler.appendsinglelinktoqueue(href)
-									##print("relevant ",href)
+								#theres=q.fres("https://en.wikipedia.org/wiki/cat")
+								#q.test(theres)
+								text,score=q.scraptext(link,"cAt")
+								if(score>0):
+									print("text length is",len(text))
+									summary=q.summarisecontent(text)
+									print("summary length is",len(summary))
 								else:
-									##print("keyword mismatch topic aint relevant!")
-									##print("irrelevant link ",href)
 									pass
-								'''
+								
 							except:
+								print("thorathitan")
 								##print("keyword mismatch topic aint relevant!")
 								##rint("irrelevant link ",href)
 								pass
@@ -136,8 +214,11 @@ class crawler:
 						return finder.pagelinks()
 				else:
 					return finder.pagelinks()
+
+'''
+
 		except:
-			##print("Error: cannot crawl page 0")
+			print("Error: cannot crawl page")
 			return set()
 		return finder.pagelinks()
 
@@ -180,5 +261,11 @@ class crawler:
 		print("nan inga eruken :)")
 		fromsettofile(crawler.queue,crawler.queuefile)
 		fromsettofile(crawler.crawled,crawler.crawledfile)
+		#fromsummarytofile(crawler.summary)
+
+	@staticmethod
+	def writesumcontenttofile(projectname,content):
+		print("elutha poren in file")
+		fromsummarytofile(projectname,content)
 
 #print("qwe")

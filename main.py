@@ -4,8 +4,8 @@ from crawler import crawler
 from domain import *
 from  tstcrawler import *
 
-PROJECT_NAME="etst"
-HOMEPAGE="https://en.wikipedia.org/wiki/cat"
+PROJECT_NAME="bottle"
+HOMEPAGE="https://en.wikipedia.org/wiki/bottle"
 #MAX=50
 
 #PROJECT_NAME="SAMSUNG"
@@ -20,7 +20,7 @@ NUMBER_OF_THREADS=8
 
 queue=Queue()
 queue.put(HOMEPAGE)
-createcontentfile(PROJECT_NAME)
+#createcontentfile(PROJECT_NAME)
 crawler(PROJECT_NAME,HOMEPAGE,DOMAIN_NAME,PROJECT_NAME)
 
 #suicide squad die when main is killed or dies :)
@@ -44,13 +44,21 @@ def create_jobs():
 	for link in fromfiletoset(QUEUE_FILE):
 		queue.put(link)
 	queue.join()
-	crawl()
+	try:
+		crawl()
+	except:
+		return
 
 def crawl():
 	queue_links=fromfiletoset(QUEUE_FILE)
 	if (len(queue_links)>0):
 		print(str(len(queue_links))+" links in the queue")
-		create_jobs()
+		try:
+			create_jobs()
+		except:
+			return
+	else:
+		return
 
 create_workers()
 crawl()

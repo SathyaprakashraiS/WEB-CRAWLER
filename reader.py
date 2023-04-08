@@ -18,6 +18,11 @@ from nltk.corpus import stopwords
 from nltk.tokenize import sent_tokenize, word_tokenize
 from nltk.stem import PorterStemmer
 
+import spacy
+from sklearn.metrics.pairwise import cosine_similarity
+
+nlp = spacy.load('en_core_web_md')
+
 class Reader(HTMLParser):
 	def __init__(self):
 		pass
@@ -53,6 +58,7 @@ class Reader(HTMLParser):
 		print(f'\n <---Text Present in The WebPage is --->\n', text, '\n')
 		return
 	def scraptext(url,word):
+		score=0
 		'''
 		#url = 'https://www.example.com'
 		response = requests.get(url)
@@ -67,6 +73,16 @@ class Reader(HTMLParser):
 		else:
 			print("illa")
 		'''
+		print("i got called")
+		aurl="https://en.wikipedia.org/wiki/"+word
+		response = requests.get(aurl)
+		asoup = BeautifulSoup(response.content, "html.parser")
+		main_content = asoup.find("div", {"id": "mw-content-text"})
+		paragraphs = main_content.find_all("p")
+		atext = ""
+		for p in paragraphs:
+			atext += p.get_text()
+
 		response = requests.get(url)
 		soup = BeautifulSoup(response.content, "html.parser")
 		main_content = soup.find("div", {"id": "mw-content-text"})
@@ -74,11 +90,22 @@ class Reader(HTMLParser):
 		text = ""
 		for p in paragraphs:
 			text += p.get_text()
-		return text
+		doc1=nlp(atext)
+		doc2=nlp(text)
+		vec1 = doc1.vector
+		vec2 = doc2.vector
+		score = cosine_similarity([vec1], [vec2])[0][0]
+		print(text)
+		print(f"score of url {url} is {score}")
+		return text,score
 	def summarisecontent(content):
-		summary = summarize(text)
+		print("got called ")
+		summary = summarize(content)
+		#print("returing the summary ",summary)
+		print("summary length",len(summary))
 		return summary
 
+'''
 q=Reader
 url="https://en.wikipedia.org/wiki/cat"
 #theres=q.fres("https://en.wikipedia.org/wiki/cat")
@@ -89,7 +116,7 @@ print("the text length is")
 print(len(text))
 print(summary)
 print(len(summary))
-
+'''
 
 
 
